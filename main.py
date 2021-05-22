@@ -143,10 +143,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
         if ret:
 
-            print(frame.dtype)
+            # print(frame.dtype)
             frame = self.detect(frame)
-            print(frame.dtype)
-
+            # print(frame.dtype)
             img_rows, img_cols, channels = frame.shape
             bytesPerLine = channels * img_cols
 
