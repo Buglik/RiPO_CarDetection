@@ -30,9 +30,6 @@ class Ui_MainWindow(object):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
-        self.detectionCheckBox = QtWidgets.QCheckBox(self.centralwidget)
-        self.detectionCheckBox.setGeometry(QtCore.QRect(700, 20, 85, 25))
-        self.detectionCheckBox.setObjectName("detectionCheckBox")
         self.startCameraButton = QtWidgets.QPushButton(self.centralwidget)
         self.startCameraButton.setGeometry(QtCore.QRect(20, 20, 100, 25))
         self.startCameraButton.setObjectName("startCameraButton")
@@ -54,7 +51,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "RiPO J.Pawleniak 248897"))
-        self.detectionCheckBox.setText(_translate("MainWindow", "Detection"))
         self.startCameraButton.setText(_translate("MainWindow", "Start camera"))
         self.startPhotoButton.setText(_translate("MainWindow", "Choose photo"))
         self.startVideoButton.setText(_translate("MainWindow", "Choose video"))
