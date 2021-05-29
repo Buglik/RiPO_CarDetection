@@ -31,14 +31,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.timer.timeout.connect(self.framePlayer)
         self.timer.setInterval(30)
 
-        # self.faceCascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
         print("Loading models ...")
-
         self.configs = config_util.get_configs_from_pipeline_file('Tensorflow/workspace/models/my_ssd_mobnet/pipeline.config')
         self.detection_model = model_builder.build(model_config=self.configs['model'], is_training=False)
-
         self.category_index = label_map_util.create_category_index_from_labelmap('Tensorflow/workspace/annotations/label_map.pbtxt')
-
         self.ckpt = tf.compat.v2.train.Checkpoint(model=self.detection_model)
         self.ckpt.restore(os.path.join('Tensorflow/workspace/models/my_ssd_mobnet', 'ckpt-11')).expect_partial()
 
@@ -47,8 +43,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.is_video_on:
             self.startVideoButton_Clicked()
 
-
         self.is_camera_on = ~self.is_camera_on
+
         if self.is_camera_on:
             self.camera = cv.VideoCapture(0)
             self.startCameraButton.setText("Stop")
@@ -64,15 +60,15 @@ class Window(QMainWindow, Ui_MainWindow):
             self.startCameraButton_Clicked()
         elif self.is_video_on:
             self.startVideoButton_Clicked()
-            # Open the file selection dialog
+
         filename,  _ = QFileDialog.getOpenFileName(self, 'Open picture')
+
         if filename:
             img = cv.imread(str(filename))
 
             img = self.detect(img)
 
             img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-
             rows, cols, channels = img.shape
             bytesPerLine = channels * cols
             QImg = QImage(img.data, cols, rows, bytesPerLine, QImage.Format_RGB888)
@@ -84,10 +80,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.is_video_on = ~self.is_video_on
         if self.is_video_on:
-            # Open the file selection
             filename, _ = QFileDialog.getOpenFileName(self, 'Open video')
-            print(filename)
-            # filename = 'test.mp4'
             if filename:
                 self.camera = cv.VideoCapture(filename)
                 self.startVideoButton.setText("Stop")
@@ -137,11 +130,10 @@ class Window(QMainWindow, Ui_MainWindow):
         ret, frame = self.camera.read()
 
         if ret:
-
             frame = self.detect(frame)
+
             img_rows, img_cols, channels = frame.shape
             bytesPerLine = channels * img_cols
-
             cv.cvtColor(frame, cv.COLOR_BGR2RGB, frame)
             QImg = QImage(frame.data, img_cols, img_rows, bytesPerLine, QImage.Format_RGB888)
             self.image.setPixmap(QPixmap.fromImage(QImg))
@@ -150,10 +142,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.startVideoButton_Clicked()
             elif self.is_camera_on:
                 self.startCameraButton_Clicked()
-
-
-
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
