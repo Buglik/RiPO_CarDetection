@@ -40,7 +40,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.category_index = label_map_util.create_category_index_from_labelmap('Tensorflow/workspace/annotations/label_map.pbtxt')
 
         self.ckpt = tf.compat.v2.train.Checkpoint(model=self.detection_model)
-        self.ckpt.restore(os.path.join('Tensorflow/workspace/models/my_ssd_mobnet', 'ckpt-6')).expect_partial()
+        self.ckpt.restore(os.path.join('Tensorflow/workspace/models/my_ssd_mobnet', 'ckpt-11')).expect_partial()
 
 
     def startCameraButton_Clicked(self):
@@ -69,11 +69,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if filename:
             img = cv.imread(str(filename))
 
-            imgGray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-            faces = self.faceCascade.detectMultiScale(imgGray, 1.1, 4)
-
-            for (x, y, w, h) in faces:
-                cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            img = self.detect(img)
 
             img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 
@@ -119,7 +115,6 @@ class Window(QMainWindow, Ui_MainWindow):
                       for key, value in detections.items()}
         detections['num_detections'] = num_detections
 
-        # detection_classes should be ints.
         detections['detection_classes'] = detections['detection_classes'].astype(np.int64)
 
         label_id_offset = 1
@@ -143,9 +138,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         if ret:
 
-            # print(frame.dtype)
             frame = self.detect(frame)
-            # print(frame.dtype)
             img_rows, img_cols, channels = frame.shape
             bytesPerLine = channels * img_cols
 
